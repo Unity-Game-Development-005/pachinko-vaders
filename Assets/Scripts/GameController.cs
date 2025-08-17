@@ -16,18 +16,6 @@ public class GameController : MonoBehaviour
 
 
 
-    public bool canLaunch1;
-
-    public bool canLaunch2;
-
-    public bool canLaunch3;
-
-
-
-
-
-
-
 
 
 
@@ -57,6 +45,7 @@ public class GameController : MonoBehaviour
     {
         
     }
+
 
 
 

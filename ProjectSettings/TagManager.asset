@@ -5,12 +5,13 @@ TagManager:
   serializedVersion: 3
   tags:
   - Ground
-  - UfoMissile
-  - TopWall
   - City
-  - BaseMissile1
-  - BaseMissile2
-  - BaseMissile3
+  - Missile Base
+  - Yellow Bullet
+  - Red Bullet
+  - Top Wall
+  - Enemy
+  - Shield
   layers:
   - Default
   - TransparentFX
@@ -19,11 +20,11 @@ TagManager:
   - Water
   - UI
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Enemy
+  - Yellow Bullet
+  - Red Bullet
+  - Shield
+  - Bumpers
   - 
   - 
   - 
