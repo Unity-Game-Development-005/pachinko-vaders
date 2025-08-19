@@ -7,11 +7,15 @@ TagManager:
   - Ground
   - City
   - Missile Base
-  - Yellow Bullet
-  - Red Bullet
   - Top Wall
   - Enemy
   - Shield
+  - Mystery Ship
+  - Enemy 1
+  - Enemy 2
+  - Enemy 3
+  - Player Bullet
+  - Enemy Bullet
   layers:
   - Default
   - TransparentFX
@@ -21,8 +25,8 @@ TagManager:
   - UI
   - 
   - Enemy
-  - Yellow Bullet
-  - Red Bullet
+  - Player Bullet
+  - Enemy Bullet
   - Shield
   - Bumpers
   - 

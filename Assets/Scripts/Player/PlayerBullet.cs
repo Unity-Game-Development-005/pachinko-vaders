@@ -30,8 +30,40 @@ public class PlayerBullet : MonoBehaviour
         }
 
 
-        if (target.CompareTag("Enemy"))
+        if (target.CompareTag("Mystery Ship"))
         {
+            GameController.gameController.MysteryShipPoints();
+
+            target.gameObject.SetActive(false);
+
+            Destroy(gameObject);
+        }
+
+
+        if (target.CompareTag("Enemy 1"))
+        {
+            GameController.gameController.UpdatePlayer1Score(GameController.gameController.enemy1Points);
+
+            target.gameObject.SetActive(false);
+
+            Destroy(gameObject);
+        }
+
+
+        if (target.CompareTag("Enemy 2"))
+        {
+            GameController.gameController.UpdatePlayer1Score(GameController.gameController.enemy2Points);
+
+            target.gameObject.SetActive(false);
+
+            Destroy(gameObject);
+        }
+
+
+        if (target.CompareTag("Enemy 3"))
+        {
+            GameController.gameController.UpdatePlayer1Score(GameController.gameController.enemy3Points);
+
             target.gameObject.SetActive(false);
 
             Destroy(gameObject);

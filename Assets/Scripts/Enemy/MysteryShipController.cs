@@ -1,10 +1,16 @@
 
-using UnityEditor.Experimental.GraphView;
+using System.Collections;
 using UnityEngine;
 
 
 public class MysteryShipController : MonoBehaviour
 {
+
+    [SerializeField] private GameObject bullet;
+
+    [SerializeField] private Transform leftLaunchZone;
+
+    [SerializeField] private Transform rightLaunchZone;
 
     [SerializeField] private Transform leftSpaceDock;
 
@@ -22,6 +28,8 @@ public class MysteryShipController : MonoBehaviour
     void Start()
     {
         InitialiseMysteryShip();
+
+        StartCoroutine(Shoot(Random.Range(2.5f, 3.5f)));
     }
 
 
@@ -53,6 +61,24 @@ public class MysteryShipController : MonoBehaviour
         }
 
         transform.Translate(mysteryShipSpeed * Time.deltaTime * mysteryShipDirection);
+    }
+
+
+    IEnumerator Shoot(float time)
+    {
+        if (transform.position.x > leftLaunchZone.position.x && transform.position.x < rightLaunchZone.position.x)
+        {
+            yield return new WaitForSeconds(time);
+
+            Instantiate(bullet, transform.position, Quaternion.identity);
+        }
+
+        else
+        {
+            yield return null;
+        }
+
+        StartCoroutine(Shoot(Random.Range(2.5f, 3.5f)));
     }
 
 

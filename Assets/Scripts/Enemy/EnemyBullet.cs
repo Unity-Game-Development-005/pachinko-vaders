@@ -38,14 +38,6 @@ public class EnemyBullet : MonoBehaviour
 
             Destroy(gameObject);
         }	
-
-
-        if (target.CompareTag("Yellow Bullet"))
-        {
-            Destroy(target.gameObject);
-
-            Destroy(gameObject);
-        }
 	}
 
 
