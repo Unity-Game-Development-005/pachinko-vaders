@@ -1,10 +1,12 @@
 ﻿
-using System.Collections;
 using UnityEngine;
 
 
 public class PlayerController : MonoBehaviour 
 {
+    public static PlayerController player;
+
+
     private float playerBaseSpeed;
 
     private Vector2 playerBaseDirection;
@@ -15,9 +17,16 @@ public class PlayerController : MonoBehaviour
 
 
 
+
+    private void Awake()
+    {
+        player = this;
+    }
+
+
     void Start()
     {
-        Initialise();
+        //Initialise();
     }
 
 
@@ -47,7 +56,7 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    private void Initialise()
+    public void Initialise()
     {
         // player
         playerLeftBoundary = -1f;
@@ -55,6 +64,10 @@ public class PlayerController : MonoBehaviour
         playerRightBoundary = 1f;
 
         playerBaseSpeed = 1f;
+
+        GameController.gameController.ActivateMissileSilos();
+
+        LivesController.livesController.UpdateLives(GameController.gameController.player1Lives);
     }
 
 

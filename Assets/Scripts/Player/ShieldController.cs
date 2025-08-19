@@ -1,13 +1,19 @@
 
 using UnityEngine;
+using UnityEngine.UI;
 
 
 public class ShieldController : MonoBehaviour
 {
 
-    private int shieldStrength;
+    private int currentShieldStrength;
+
+    private int maximumShieldStrength;
 
     private int shieldDamage;
+
+
+    public Image healthBar;
 
 
 
@@ -20,35 +26,35 @@ public class ShieldController : MonoBehaviour
     }
 
 
-
-
-
-    public void DamageShields(int damage)
-    {
-        shieldStrength -= 10;
-    }
-
-
-
     private void Initialise()
     {
-        shieldStrength = 100;
+        currentShieldStrength = 100;
+
+        maximumShieldStrength = 100;
 
         shieldDamage = 10;
     }
 
+
+    public void DamageShields(int damage)
+    {
+        currentShieldStrength -= 10;
+
+
+        // update the shield's health bar
+        healthBar.fillAmount = (float)currentShieldStrength / (float)maximumShieldStrength;
+    }
 
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Enemy Bullet"))
         {
-            shieldStrength -= 10;
+            //shieldStrength -= 10;
+            DamageShields(shieldDamage);
 
-            if (shieldStrength <= 0)
+            if (currentShieldStrength <= 0)
             {
-                DamageShields(shieldDamage);
-
                 gameObject.SetActive(false);
 
                 Destroy(collision.gameObject);

@@ -6,7 +6,7 @@ using TMPro;
 //
 // Pachinko Vaders v2025.07.04
 //
-// 2025.08.18
+// v2025.08.19
 //
 
 public class GameController : MonoBehaviour
@@ -18,6 +18,10 @@ public class GameController : MonoBehaviour
 
     public TMP_Text highScoreValue;
 
+
+    public GameObject[] missileBases;
+
+    public GameObject[] missileSilos;
 
 
 
@@ -45,6 +49,11 @@ public class GameController : MonoBehaviour
 
 
 
+    private const int MISSILE_BASE_1 = 0;
+
+    private const int MISSILE_BASE_2 = 1;
+
+    private const int MISSILE_BASE_3 = 2;
 
 
 
@@ -85,10 +94,6 @@ public class GameController : MonoBehaviour
 
         gameOver = true;
 
-        ///Player1Controller.player1.periscopeReticle.gameObject.SetActive(false);
-
-        ///Player1Controller.player1.ReloadAmmo(false);
-
         player1Score = 0;
 
         player1Lives = 0;
@@ -106,6 +111,8 @@ public class GameController : MonoBehaviour
         enemy3Points = 0;
 
         ///ScoreController.scoreController.InitialiseScores();
+        
+        LivesController.livesController.UpdateLives(player1Lives);
 
         ///gameOverText.gameObject.SetActive(true);
     }
@@ -130,7 +137,7 @@ public class GameController : MonoBehaviour
 
         ///ScoreController.scoreController.InitialiseScores();
 
-        ///Player1Controller.player1.Initialise();
+        PlayerController.player.Initialise();
 
         ///gameOverText.gameObject.SetActive(false);
 
@@ -183,14 +190,6 @@ public class GameController : MonoBehaviour
     }
 
 
-    public void PlayerDestroyed()
-    {
-        ///PlayerController.player.playerShip.gameObject.SetActive(false);
-
-        ///UpdatePlayer1Lives();
-    }
-
-
     public void MysteryShipPoints()
     {
         float mysteryPointsChoice = Random.Range(1f, 4f);
@@ -226,19 +225,55 @@ public class GameController : MonoBehaviour
     }
 
 
-    public void UpdatePlayer1Score(int points)
+    public void ActivateMissileSilos()
     {
-        player1Score += points;
+        missileSilos[MISSILE_BASE_1].SetActive(true);
 
-        ///ScoreController.scoreController.UpdateScoreDisplay(player1Score, ScoreController.PLAYER_1);
+        missileSilos[MISSILE_BASE_2].SetActive(true);
 
-        player1ScoreValue.text = player1Score.ToString("0000");
+        missileSilos[MISSILE_BASE_3].SetActive(true);
+
+        // detach the missile silos from their parant game object
+        missileSilos[MISSILE_BASE_1].transform.SetParent(null);
+
+        missileSilos[MISSILE_BASE_2].transform.SetParent(null);
+
+        missileSilos[MISSILE_BASE_3].transform.SetParent(null);
+    }
+
+
+    public void MissileBaseDestroyed()
+    {
+        DeactivateMissileSilos();
+
+        UpdatePlayer1Lives();
+    }
+
+
+    private void DeactivateMissileSilos()
+    {
+        if (!missileBases[MISSILE_BASE_1].activeInHierarchy)
+        {
+            missileSilos[MISSILE_BASE_1].SetActive(false);
+        }
+
+        if (!missileBases[MISSILE_BASE_2].activeInHierarchy)
+        {
+            missileSilos[MISSILE_BASE_2].SetActive(false);
+        }
+
+        if (!missileBases[MISSILE_BASE_3].activeInHierarchy)
+        {
+            missileSilos[MISSILE_BASE_3].SetActive(false);
+        }
     }
 
 
     private void UpdatePlayer1Lives()
     {
         player1Lives -= 1;
+
+        LivesController.livesController.UpdateLives(player1Lives);
 
         if (player1Lives == 0)
         {
@@ -250,13 +285,14 @@ public class GameController : MonoBehaviour
 
             UpdateHighScore();
         }
+    }
 
-        else
-        {
-            ///LivesController.livesController.UpdateLives(player1Lives);
 
-            ///StartCoroutine(PlayerRespawnDelay());
-        }
+    public void CityDestroyed()
+    {
+        ///PlayerController.player.playerShip.gameObject.SetActive(false);
+
+        UpdatePlayer1Cities();
     }
 
 
@@ -272,8 +308,18 @@ public class GameController : MonoBehaviour
 
             ///gameOverText.gameObject.SetActive(true);
 
-            ///UpdateHighScore();
+            UpdateHighScore();
         }
+    }
+
+
+    public void UpdatePlayer1Score(int points)
+    {
+        player1Score += points;
+
+        ///ScoreController.scoreController.UpdateScoreDisplay(player1Score, ScoreController.PLAYER_1);
+
+        player1ScoreValue.text = player1Score.ToString("0000");
     }
 
 
