@@ -1,12 +1,23 @@
 ﻿
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
+using TMPro;
 
+//
+// Pachinko Vaders v2025.07.04
+//
+// 2025.08.21
+//
 
 public class MissileLauncherController : MonoBehaviour 
 {
+    [SerializeField] private TMP_Text missileCountLow;
 
-	[SerializeField] private GameObject bullet;
+    [SerializeField] private TMP_Text missileCountOut;
+
+
+
+    [SerializeField] private GameObject bullet;
 
 
     public Transform[] missiles;
@@ -24,6 +35,9 @@ public class MissileLauncherController : MonoBehaviour
     public bool isBase2;
 
     public bool isBase3;
+
+
+    private const int MINIMUM_MISSILE_COUNT = 3;
 
 
 
@@ -54,37 +68,40 @@ public class MissileLauncherController : MonoBehaviour
 
     private void GetPlayerInput()
 	{
-		if (isBase1)
-		{
-            if (Input.GetKeyDown(KeyCode.B))
+        if (!GameController.gameController.gameOver)
+        {
+            if (isBase1)
             {
-                if (canShoot)
+                if (Input.GetKeyDown(KeyCode.B))
                 {
-                    StartCoroutine(Shoot());
+                    if (canShoot)
+                    {
+                        StartCoroutine(Shoot());
+                    }
                 }
             }
-        }
 
 
-        if (isBase2)
-		{
-            if (Input.GetKeyDown(KeyCode.N))
+            if (isBase2)
             {
-                if (canShoot)
+                if (Input.GetKeyDown(KeyCode.N))
                 {
-                    StartCoroutine(Shoot());
+                    if (canShoot)
+                    {
+                        StartCoroutine(Shoot());
+                    }
                 }
             }
-        }
 
 
-        if (isBase3)
-		{
-            if (Input.GetKeyDown(KeyCode.M))
+            if (isBase3)
             {
-                if (canShoot)
+                if (Input.GetKeyDown(KeyCode.M))
                 {
-                    StartCoroutine(Shoot());
+                    if (canShoot)
+                    {
+                        StartCoroutine(Shoot());
+                    }
                 }
             }
         }
@@ -118,12 +135,21 @@ public class MissileLauncherController : MonoBehaviour
 
         if (missileCount >= 0)
         {
+            if (missileCount <= MINIMUM_MISSILE_COUNT)
+            {
+                missileCountLow.gameObject.SetActive(true);
+            }
+
             missiles[missiles.Length - (missileCount + 1)].gameObject.SetActive(false);
         }
 
         if (missileCount - 1 < 0)
         {
             outOfMissiles = true;
+
+            missileCountLow.gameObject.SetActive(false);
+
+            missileCountOut.gameObject.SetActive(true);
 
             return;
         }

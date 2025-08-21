@@ -1,7 +1,11 @@
 
 using UnityEngine;
 
-
+//
+// Pachinko Vaders v2025.07.04
+//
+// v2025.08.21
+//
 
 public class DroneBaseController : MonoBehaviour
 {
@@ -63,17 +67,20 @@ public class DroneBaseController : MonoBehaviour
 
     private void MoveDroneBase()
     {
-        if (transform.position.x > droneRightBoundary)
+        if (!GameController.gameController.gameOver)
         {
-            droneBaseDirection = Vector2.left;
-        }
+            if (transform.position.x > droneRightBoundary)
+            {
+                droneBaseDirection = Vector2.left;
+            }
 
-        else if (transform.position.x < droneLeftBoundary)
-        {
-            droneBaseDirection = Vector2.right;
-        }
+            else if (transform.position.x < droneLeftBoundary)
+            {
+                droneBaseDirection = Vector2.right;
+            }
 
-        transform.Translate(droneBaseSpeed * Time.deltaTime * droneBaseDirection);
+            transform.Translate(droneBaseSpeed * Time.deltaTime * droneBaseDirection);
+        }
     }
 
 

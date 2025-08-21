@@ -5,14 +5,16 @@ using UnityEngine;
 //
 // Pachinko Vaders v2025.07.04
 //
-// 2025.08.19
+// 2025.08.21
 //
 
 public class LivesController : MonoBehaviour
 {
     public static LivesController livesController;
 
+
     public Transform[] lives;
+
 
 
     private void Awake()
@@ -36,6 +38,8 @@ public class LivesController : MonoBehaviour
                 lives[i].gameObject.SetActive(true);
             }
         }
+
+        GameController.gameController.livesText.text = GameController.gameController.playerLives.ToString();
     }
 
 

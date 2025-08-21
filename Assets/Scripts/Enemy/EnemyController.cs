@@ -1,6 +1,11 @@
 
 using UnityEngine;
 
+//
+// Pachinko Vaders v2025.07.04
+//
+// v2025.08.21
+//
 
 public class EnemyController : MonoBehaviour
 {
@@ -11,8 +16,6 @@ public class EnemyController : MonoBehaviour
     private Vector3 enemyDirection;
 
     public int amountKilled;
-
-    public int totalEnemy;
 
     public float percentKilled;
 
@@ -25,9 +28,7 @@ public class EnemyController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        Initialise();
-
-        InvokeRepeating(nameof(MissileAttack), missileAttackRate, missileAttackRate);
+        StartUp();
     }
 
 
@@ -40,13 +41,19 @@ public class EnemyController : MonoBehaviour
     }
 
 
+    private void StartUp()
+    {
+        Initialise();
+
+        InvokeRepeating(nameof(MissileAttack), missileAttackRate, missileAttackRate);
+    }
+
+
     private void Initialise()
     {
         enemyMoveSpeed = 0.25f;
 
         enemyDirection = Vector2.right;
-
-        totalEnemy = 25;
 
         missileAttackRate = 1f;
     }
@@ -54,28 +61,31 @@ public class EnemyController : MonoBehaviour
 
     private void MoveEnemy()
     {
-        transform.position += enemyDirection * enemyMoveSpeed * Time.deltaTime;
-
-        Vector3 leftEdge = Camera.main.ViewportToWorldPoint(Vector3.zero);
-
-        Vector3 rightEdge = Camera.main.ViewportToWorldPoint(Vector3.right);
-
-
-        foreach (Transform invader in transform)
+        if (!GameController.gameController.gameOver)
         {
-            if (!invader.gameObject.activeInHierarchy)
-            {
-                continue;
-            }
+            transform.position += enemyDirection * enemyMoveSpeed * Time.deltaTime;
 
-            if (enemyDirection == Vector3.right && invader.position.x >= rightEdge.x - 1f)
-            {
-                enemyDirection.x *= -1f;
-            }
+            Vector3 leftEdge = Camera.main.ViewportToWorldPoint(Vector3.zero);
 
-            else if (enemyDirection == Vector3.left && invader.position.x <= leftEdge.x + 1f)
+            Vector3 rightEdge = Camera.main.ViewportToWorldPoint(Vector3.right);
+
+
+            foreach (Transform invader in transform)
             {
-                enemyDirection.x *= -1f;
+                if (!invader.gameObject.activeInHierarchy)
+                {
+                    continue;
+                }
+
+                if (enemyDirection == Vector3.right && invader.position.x >= rightEdge.x - 1f)
+                {
+                    enemyDirection.x *= -1f;
+                }
+
+                else if (enemyDirection == Vector3.left && invader.position.x <= leftEdge.x + 1f)
+                {
+                    enemyDirection.x *= -1f;
+                }
             }
         }
     }
@@ -83,20 +93,24 @@ public class EnemyController : MonoBehaviour
 
     private void MissileAttack()
     {
-        foreach (Transform invader in transform)
+        if (!GameController.gameController.gameOver)
         {
-            if (!invader.gameObject.activeInHierarchy)
+            foreach (Transform invader in transform)
             {
-                continue;
+                if (!invader.gameObject.activeInHierarchy)
+                {
+                    continue;
+                }
+
+                if (Random.value < (1f / (float)amountAlive))
+                {
+                    Instantiate(bullet, invader.position, Quaternion.identity);
+
+                    GameController.gameController.missiles.Add(bullet);
+
+                    break;
+                }
             }
-
-            if (Random.value < (1f / (float)amountAlive))
-            {
-                Instantiate(bullet, invader.position, Quaternion.identity);
-
-                break;
-            }
-
         }
     }
 
@@ -109,13 +123,13 @@ public class EnemyController : MonoBehaviour
 
     private int GetEnemyAlive()
     {
-        return totalEnemy - amountKilled;
+        return GameController.gameController.totalEnemy - amountKilled;
     }
 
 
     private float GetEnemyPercentageKilled()
     {
-        return (float)amountKilled / (float)totalEnemy;
+        return (float)amountKilled / (float)GameController.gameController.totalEnemy;
     }
 
 

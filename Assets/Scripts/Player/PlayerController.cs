@@ -1,6 +1,11 @@
 ﻿
 using UnityEngine;
 
+//
+// Pachinko Vaders v2025.07.04
+//
+// 2025.08.21
+//
 
 public class PlayerController : MonoBehaviour 
 {
@@ -21,12 +26,6 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         player = this;
-    }
-
-
-    void Start()
-    {
-        //Initialise();
     }
 
 
@@ -67,7 +66,7 @@ public class PlayerController : MonoBehaviour
 
         GameController.gameController.ActivateMissileSilos();
 
-        LivesController.livesController.UpdateLives(GameController.gameController.player1Lives);
+        LivesController.livesController.UpdateLives(GameController.gameController.playerLives);
     }
 
 

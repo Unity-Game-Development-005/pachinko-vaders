@@ -1,12 +1,13 @@
 
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
 //
 // Pachinko Vaders v2025.07.04
 //
-// v2025.08.19
+// v2025.08.21
 //
 
 public class GameController : MonoBehaviour
@@ -14,28 +15,57 @@ public class GameController : MonoBehaviour
     public static GameController gameController;
 
 
-    public TMP_Text player1ScoreValue;
+    public TMP_Text livesText;
+
+    public TMP_Text playerScoreValue;
 
     public TMP_Text highScoreValue;
 
 
+    public Transform startScreen;
+
+    public Transform gameOverScreen;
+
+    public Transform readyPlayerOneScreen;
+
+
+    public List<GameObject> missiles;
+
+
     public GameObject[] missileBases;
+
+    public GameObject[] missileBaseShields;
 
     public GameObject[] missileSilos;
 
+    public GameObject[] cities;
+
+    public GameObject[] cityShields;
 
 
+    public GameObject[] enemies;
 
-    [HideInInspector] public int player1Lives;
 
-    [HideInInspector] public int player1Cities;
+    [HideInInspector] public int playerLives;
 
-    private int player1Score;
+    [HideInInspector] public int playerCities;
+
+    [HideInInspector] public int remainingMissilePoints;
+
+    [HideInInspector] public int remainingCitiesPoints;
+
+    private int playerScore;
 
     private int highScore;
 
 
     [HideInInspector] public int mysteryShipPoints;
+
+    [HideInInspector] public int enemyUfoPoints;
+
+    [HideInInspector] public int enemyPlanePoints;
+
+    [HideInInspector] public int enemyMissilePoints;
 
     [HideInInspector] public int enemy1Points;
 
@@ -43,10 +73,13 @@ public class GameController : MonoBehaviour
 
     [HideInInspector] public int enemy3Points;
 
+    [HideInInspector] public int totalEnemy;
+
+
+
     [HideInInspector] public bool canPlay;
 
     [HideInInspector] public bool gameOver;
-
 
 
     private const int MISSILE_BASE_1 = 0;
@@ -72,37 +105,53 @@ public class GameController : MonoBehaviour
     }
 
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        StartUp();
 
-        Initialise();
+    private void Start()
+    {
+        CabinetStartUp();
     }
 
 
-    // Update is called once per frame
-    void Update()
-    {
-        GameLoop();
-    }
-
-
-    private void StartUp()
+    // cabinet startup
+    private void CabinetStartUp()
     {
         canPlay = false;
 
         gameOver = true;
 
-        player1Score = 0;
-
-        player1Lives = 0;
-
-        player1Cities = 0;
-
         highScore = 0;
 
+        highScoreValue.text = "0000";
+
+        GameReset();
+
+        gameOverScreen.gameObject.SetActive(false);
+
+        readyPlayerOneScreen.gameObject.SetActive(false);
+
+        startScreen.gameObject.SetActive(true);
+
+        Time.timeScale = 0;
+    }
+
+
+    private void GameReset()
+    {
+        playerScore = 0;
+
+        playerLives = 0;
+
+        playerCities = 0;
+
+        remainingMissilePoints = 0;
+
+        remainingCitiesPoints = 0;
+
         mysteryShipPoints = 0;
+
+        enemyUfoPoints = 0;
+
+        enemyPlanePoints = 0;
 
         enemy1Points = 0;
 
@@ -110,24 +159,30 @@ public class GameController : MonoBehaviour
 
         enemy3Points = 0;
 
-        ///ScoreController.scoreController.InitialiseScores();
-        
-        LivesController.livesController.UpdateLives(player1Lives);
+        totalEnemy = 0;
 
-        ///gameOverText.gameObject.SetActive(true);
+        playerScoreValue.text = "0000";
     }
-
-
-
 
 
     private void Initialise()
     {
-        player1Score = 0;
+        playerScore = 0;
 
-        player1Lives = 3;
+        playerLives = 3;
 
-        player1Cities = 6;
+        playerCities = 6;
+
+        remainingMissilePoints = 5;
+
+        remainingCitiesPoints = 100;
+
+
+        enemyMissilePoints = 25;
+
+        enemyUfoPoints = 100;
+
+        enemyPlanePoints = 100;
 
         enemy1Points = 50;
 
@@ -135,58 +190,115 @@ public class GameController : MonoBehaviour
 
         enemy3Points = 10;
 
-        ///ScoreController.scoreController.InitialiseScores();
+        totalEnemy = 27;
+
+
+        ActivateMissileBases();
+
+        ActivateCities();
+
+
+        playerScoreValue.text = playerScore.ToString("0000");
 
         PlayerController.player.Initialise();
 
-        ///gameOverText.gameObject.SetActive(false);
+
+        ActivateEnemies();
+
+
+        startScreen.gameObject.SetActive(false);
+
+        gameOverScreen.gameObject.SetActive(false);
 
         StartCoroutine(StartDelay());
     }
 
 
+    private void ActivateEnemies()
+    {
+        for (int enemy = 0; enemy < totalEnemy; enemy++)
+        {
+            enemies[enemy].SetActive(true);
+        }
+    }
+
+
+    private void ActivateMissileBases()
+    {
+        for (int missileBase = 0; missileBase < playerLives; missileBase++)
+        {
+            missileBases[missileBase].SetActive(true);
+
+            missileBaseShields[missileBase].SetActive(true);
+
+            missileBaseShields[missileBase].GetComponent<ShieldController>().currentShieldStrength = 100;
+
+            missileBaseShields[missileBase].GetComponent<ShieldController>().maximumShieldStrength = 100;
+
+            missileBaseShields[missileBase].GetComponent<ShieldController>().shieldDamage = 10;
+
+            missileBaseShields[missileBase].GetComponent<ShieldController>().healthBar.fillAmount =
+                (float)missileBaseShields[missileBase].GetComponent<ShieldController>().currentShieldStrength /
+                (float)missileBaseShields[missileBase].GetComponent<ShieldController>().maximumShieldStrength;
+
+        }
+    }
+
+
+    private void ActivateCities()
+    {
+        for (int city = 0; city < playerCities; city++)
+        {
+            cities[city].SetActive(true);
+
+            cityShields[city].SetActive(true);
+
+            cityShields[city].GetComponent<ShieldController>().currentShieldStrength = 100;
+
+            cityShields[city].GetComponent<ShieldController>().maximumShieldStrength = 100;
+
+            cityShields[city].GetComponent<ShieldController>().shieldDamage = 10;
+
+            cityShields[city].GetComponent<ShieldController>().healthBar.fillAmount = 
+                (float)cityShields[city].GetComponent<ShieldController>().currentShieldStrength / 
+                (float)cityShields[city].GetComponent<ShieldController>().maximumShieldStrength;
+        }
+    }
+
+
     private IEnumerator StartDelay()
     {
-        yield return new WaitForSeconds(1f);
+        readyPlayerOneScreen.gameObject.SetActive(true);
+
+        Time.timeScale = 1;
+
+        yield return new WaitForSeconds(3f);
 
         gameOver = false;
 
         canPlay = true;
+
+        readyPlayerOneScreen.gameObject.SetActive(false);
     }
 
 
-    private void GameLoop()
+    public void StartOnePlayer()
     {
-        if (gameOver)
-        {
-                ///canPlay = false;
+        GameReset();
 
-                ///gameOver = true;
-
-                ///gameOverText.gameObject.SetActive(true);
-        ///}
-
-        ///else
-        ///{
-            ///UpdateHighScore();
-
-            KeyboardController();
-        }
-    }
-
-
-    private void KeyboardController()
-    {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            StartOnePlayer();
-        }
-    }
-
-
-    private void StartOnePlayer()
-    {
         Initialise();
+    }
+
+
+    private void GameOver()
+    {
+        Time.timeScale = 0;
+
+        canPlay = false;
+
+        gameOver = true;
+
+        gameOverScreen.gameObject.SetActive(true);
     }
 
 
@@ -225,6 +337,18 @@ public class GameController : MonoBehaviour
     }
 
 
+    public void UfoPoints()
+    {
+        UpdatePlayer1Score(enemyUfoPoints);
+    }
+
+
+    public void PlanePoints()
+    {
+        UpdatePlayer1Score(enemyPlanePoints);
+    }
+
+
     public void ActivateMissileSilos()
     {
         missileSilos[MISSILE_BASE_1].SetActive(true);
@@ -244,14 +368,6 @@ public class GameController : MonoBehaviour
 
     public void MissileBaseDestroyed()
     {
-        DeactivateMissileSilos();
-
-        UpdatePlayer1Lives();
-    }
-
-
-    private void DeactivateMissileSilos()
-    {
         if (!missileBases[MISSILE_BASE_1].activeInHierarchy)
         {
             missileSilos[MISSILE_BASE_1].SetActive(false);
@@ -266,71 +382,53 @@ public class GameController : MonoBehaviour
         {
             missileSilos[MISSILE_BASE_3].SetActive(false);
         }
+
+        UpdatePlayer1Lives();
     }
 
 
     private void UpdatePlayer1Lives()
     {
-        player1Lives -= 1;
+        playerLives -= 1;
 
-        LivesController.livesController.UpdateLives(player1Lives);
+        LivesController.livesController.UpdateLives(playerLives);
 
-        if (player1Lives == 0)
+        if (playerLives == 0)
         {
-            canPlay = false;
-
-            gameOver = true;
-
-            ///gameOverText.gameObject.SetActive(true);
-
             UpdateHighScore();
+
+            GameOver();
         }
     }
 
 
     public void CityDestroyed()
     {
-        ///PlayerController.player.playerShip.gameObject.SetActive(false);
+        playerCities -= 1;
 
-        UpdatePlayer1Cities();
-    }
-
-
-    private void UpdatePlayer1Cities()
-    {
-        player1Cities -= 1;
-
-        if (player1Cities == 0)
+        if (playerCities == 0)
         {
-            canPlay = false;
-
-            gameOver = true;
-
-            ///gameOverText.gameObject.SetActive(true);
-
             UpdateHighScore();
+
+            GameOver();
         }
     }
 
 
     public void UpdatePlayer1Score(int points)
     {
-        player1Score += points;
+        playerScore += points;
 
-        ///ScoreController.scoreController.UpdateScoreDisplay(player1Score, ScoreController.PLAYER_1);
-
-        player1ScoreValue.text = player1Score.ToString("0000");
+        playerScoreValue.text = playerScore.ToString("0000");
     }
 
 
     private void UpdateHighScore()
     {
-        if (player1Score > highScore)
+        if (playerScore > highScore)
         {
-            highScore = player1Score;
+            highScore = playerScore;
         }
-
-        ///ScoreController.scoreController.UpdateScoreDisplay(highScore, ScoreController.HIGH_SCORE);
 
         highScoreValue.text = highScore.ToString("0000");
     }

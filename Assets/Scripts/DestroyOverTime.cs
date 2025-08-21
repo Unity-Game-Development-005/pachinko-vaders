@@ -17,6 +17,8 @@ public class DestroyOverTime : MonoBehaviour
 		if(lifetime < 0)
 		{
 			Destroy(gameObject);
+
+			GameController.gameController.missiles.Remove(gameObject);
 		}
 	}
 

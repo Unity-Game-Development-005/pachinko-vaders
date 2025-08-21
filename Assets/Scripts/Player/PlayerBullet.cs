@@ -1,7 +1,11 @@
 ﻿
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
+//
+// Pachinko Vaders v2025.07.04
+//
+// 2025.08.20
+//
 
 public class PlayerBullet : MonoBehaviour 
 {
@@ -31,6 +35,24 @@ public class PlayerBullet : MonoBehaviour
 
 
         if (target.CompareTag("Mystery Ship"))
+        {
+            GameController.gameController.MysteryShipPoints();
+
+            target.gameObject.SetActive(false);
+
+            Destroy(gameObject);
+        }
+
+        if (target.CompareTag("UFO"))
+        {
+            GameController.gameController.MysteryShipPoints();
+
+            target.gameObject.SetActive(false);
+
+            Destroy(gameObject);
+        }
+
+        if (target.CompareTag("Plane"))
         {
             GameController.gameController.MysteryShipPoints();
 

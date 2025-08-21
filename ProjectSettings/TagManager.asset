@@ -16,6 +16,8 @@ TagManager:
   - Enemy 3
   - Player Bullet
   - Enemy Bullet
+  - UFO
+  - Plane
   layers:
   - Default
   - TransparentFX

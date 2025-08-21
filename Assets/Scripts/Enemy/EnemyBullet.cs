@@ -1,6 +1,11 @@
 ﻿
 using UnityEngine;
 
+//
+// Pachinko Vaders v2025.07.04
+//
+// v2025.08.21
+//
 
 public class EnemyBullet : MonoBehaviour 
 {
@@ -37,8 +42,6 @@ public class EnemyBullet : MonoBehaviour
             target.gameObject.SetActive(false);
 
             GameController.gameController.MissileBaseDestroyed();
-
-            //GameController.gameController.DeactivateMissileSilos();
 
             Destroy(gameObject);
         }

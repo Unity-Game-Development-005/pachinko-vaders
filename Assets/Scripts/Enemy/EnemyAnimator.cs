@@ -1,6 +1,11 @@
 
 using UnityEngine;
 
+//
+// Pachinko Vaders v2025.07.04
+//
+// v2025.08.20
+//
 
 public class EnemyAnimator : MonoBehaviour
 {
@@ -22,6 +27,12 @@ public class EnemyAnimator : MonoBehaviour
 
 
     private void Start()
+    {
+        StartUp();
+    }
+
+
+    private void StartUp()
     {
         InvokeRepeating(nameof(AnimateSprite), animationTime, animationTime);
     }

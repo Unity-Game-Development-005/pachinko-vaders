@@ -2,15 +2,20 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+//
+// Pachinko Vaders v2025.07.04
+//
+// v2025.08.21
+//
 
 public class ShieldController : MonoBehaviour
 {
 
-    private int currentShieldStrength;
+    [HideInInspector] public int currentShieldStrength;
 
-    private int maximumShieldStrength;
+    [HideInInspector] public int maximumShieldStrength;
 
-    private int shieldDamage;
+    [HideInInspector] public int shieldDamage;
 
 
     public Image healthBar;
@@ -19,26 +24,9 @@ public class ShieldController : MonoBehaviour
 
 
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void DamageShields(int damage)
     {
-        Initialise();
-    }
-
-
-    private void Initialise()
-    {
-        currentShieldStrength = 100;
-
-        maximumShieldStrength = 100;
-
-        shieldDamage = 10;
-    }
-
-
-    public void DamageShields(int damage)
-    {
-        currentShieldStrength -= 10;
+        currentShieldStrength -= damage;
 
 
         // update the shield's health bar
@@ -50,7 +38,6 @@ public class ShieldController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy Bullet"))
         {
-            //shieldStrength -= 10;
             DamageShields(shieldDamage);
 
             if (currentShieldStrength <= 0)
@@ -61,8 +48,6 @@ public class ShieldController : MonoBehaviour
             }
         }
     }
-
-
 
 
 } // end of class
